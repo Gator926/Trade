@@ -1,5 +1,5 @@
 from unittest import TestCase
-from CollectData.collect_data.Gateio import GateWs
+from CollectData.Untils.Gateio import GateWs
 from CollectData.collect_data.Settings import Settings
 
 

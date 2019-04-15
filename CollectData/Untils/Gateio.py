@@ -1,3 +1,5 @@
+import random
+
 from websocket import create_connection
 import time
 import json
@@ -18,7 +20,6 @@ class GateWs:
         self.__secret_key = secret_key
 
     def gate_get(self, id, method, params):
-        # if (params == None):
         if params is None:
             params = []
         ws = create_connection(self.__url)
@@ -42,3 +43,7 @@ class GateWs:
             js = json.dumps(data)
             ws.send(js)
             return ws.recv()
+
+    @staticmethod
+    def generate_rand_number():
+        return random.randint(0, 99999)
