@@ -1,6 +1,7 @@
 import random
 
 from websocket import create_connection
+from CollectData.collect_data.Settings import Settings
 import time
 import json
 import hmac
@@ -32,7 +33,8 @@ class GateWs:
         ws = create_connection(self.__url)
         nonce = int(time.time() * 1000)
         signature = get_sign(self.__secret_key, str(nonce))
-        data = {'id': self.generate_rand_number(), 'method': 'server.sign', 'params': [self.__api_key, signature, nonce]}
+        data = {'id': self.generate_rand_number(), 'method': 'server.sign',
+                'params': [self.__api_key, signature, nonce]}
         js = json.dumps(data)
         ws.send(js)
         if method == "server.sign":
@@ -47,3 +49,8 @@ class GateWs:
     @staticmethod
     def generate_rand_number():
         return random.randint(0, 99999)
+
+
+if __name__ == '__main__':
+    gate_ws = GateWs(Settings['Gate']['url'], Settings['Gate']['secret_key'], Settings['Gate']['message'])
+    print(gate_ws.gate_request('server.ping', []))

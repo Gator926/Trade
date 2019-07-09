@@ -1,10 +1,11 @@
+from ConfigHandler.ConfigHandler import ConfigHandler
 import logging
 import logging.handlers
 import os
 import time
 
 
-class LogHandler(object):
+class LogHandler(object, ConfigHandler):
     def __init__(self):
         self.logger = logging.getLogger("")
         # 设置输出的等级
