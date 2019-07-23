@@ -9,8 +9,5 @@ class MongodbHandler(LogHandler):
         self.database_name = self.get_config_value('mongodb', 'database')
         self.collection_name = self.get_config_value('mongodb', 'collection')
         self.client = pymongo.MongoClient(f'mongodb://{self.host}:{self.port}/')
-        if self.connection.jupyter:
-            self.database = self.connection[self.collection_name]
-        if self.connection.notebook:
-            self.collection = self.database[self.client]
-
+        self.mongo_database = self.client[self.database_name]
+        self.mongo_collection = self.mongo_database[self.collection_name]
