@@ -11,8 +11,8 @@ class BaseStrategy(LogHandler):
     def signal(self):
         raise NotImplementedError
 
-    def buy(self):
+    def buy(self, symbol_name, **kwargs):
         raise NotImplementedError
 
-    def sell(self):
+    def sell(self, symbol_name, **kwargs):
         raise NotImplementedError

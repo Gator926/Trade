@@ -30,8 +30,8 @@ class LogHandler(ConfigHandler):
                                                                    maxBytes=1024 * 1024 * 50,
                                                                    backupCount=15)
         # 设置输出格式
-        formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S')
-        formatter = logging.Formatter('%(asctime)s %(filename)s [line:%(lineno)d] %(levelname)s %(message)s')
+        # formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] %(message)s', '%Y-%m-%d %H:%M:%S')
+        formatter = logging.Formatter('[%(asctime)s] %(filename)s [line:%(lineno)d] %(levelname)s %(message)s')
         rotatingFileHandler.setFormatter(formatter)
         # 控制台句柄
         console = logging.StreamHandler()
@@ -53,10 +53,3 @@ class LogHandler(ConfigHandler):
 
     def error(self, message):
         self.logger.error(message)
-
-
-if __name__ == '__main__':
-    log_handler = LogHandler()
-    log_handler.info("test")
-    log_handler.warning("waringi")
-    log_handler.debug("warung")
