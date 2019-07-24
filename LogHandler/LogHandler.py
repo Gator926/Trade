@@ -7,6 +7,7 @@ import time
 
 class LogHandler(ConfigHandler):
     def __init__(self):
+        ConfigHandler.__init__(self)
         self.logger = logging.getLogger("")
         # 设置输出的等级
         LEVELS = {'NOSET': logging.NOTSET,

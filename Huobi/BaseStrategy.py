@@ -5,6 +5,9 @@ class BaseStrategy(LogHandler):
     """
     策略基类
     """
+    def __init__(self):
+        LogHandler.__init__(self)
+
     def signal(self):
         raise NotImplementedError
 
