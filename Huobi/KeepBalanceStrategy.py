@@ -29,8 +29,8 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
             else:
                 self.logger.info(f"当前持有{value}合计金额: {balance_dict[value]['amount']}, 对标美元: "
                                  f"{balance_dict[value]['dollar']}, 小于阈值不触发交易, "
-                                 f"买入阈值: {float(balance_dict[value]['amount']) * 1.05}, "
-                                 f"卖出阈值: {float(balance_dict[value]['dollar']) * 1.05}")
+                                 f"买入阈值: {retain_decimals(float(balance_dict[value]['dollar']) / 1.05, 2)}, "
+                                 f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.05, 2)}")
 
     def buy(self, symbol_name, **kwargs):
         try:
