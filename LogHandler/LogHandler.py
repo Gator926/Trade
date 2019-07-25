@@ -35,7 +35,7 @@ class LogHandler(ConfigHandler):
         rotatingFileHandler.setFormatter(formatter)
         # 控制台句柄
         console = logging.StreamHandler()
-        console.setLevel(logging.NOTSET)
+        console.setLevel(logging.INFO)
         console.setFormatter(formatter)
         # 添加内容到日志句柄中
         self.logger.addHandler(rotatingFileHandler)
