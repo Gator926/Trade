@@ -12,6 +12,7 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
     """
     动态平衡策略
     """
+
     def __init__(self):
         BaseStrategy.__init__(self)
         MongodbHandler.__init__(self)
@@ -21,9 +22,9 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
     def signal(self):
         balance_dict = self.get_account_balance()
         for key, value in enumerate(balance_dict):
-            if float(balance_dict[value]["amount"]) * 1.05 < float(balance_dict[value]["dollar"]):
+            if float(balance_dict[value]["amount"]) * 1.03 < float(balance_dict[value]["dollar"]):
                 self.buy(value, amount=balance_dict[value]["amount"], dollar=balance_dict[value]["dollar"])
-            elif float(balance_dict[value]["dollar"]) * 1.05 < float(balance_dict[value]["amount"]):
+            elif float(balance_dict[value]["dollar"]) * 1.03 < float(balance_dict[value]["amount"]):
                 self.sell(value, amount=balance_dict[value]["amount"], dollar=balance_dict[value]["dollar"],
                           price=balance_dict[value]["price"])
             else:
@@ -57,8 +58,8 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
             amount_precision = float(precision['amount_precision'])
 
             # 计算欲卖出的数目
-            sell_currency = retain_decimals((float(kwargs['amount']) - float(kwargs['dollar'])) / 2 / kwargs['price'],
-                                            amount_precision)
+            sell_currency = retain_decimals(
+                (float(kwargs['amount']) - float(kwargs['dollar'])) / 2 / float(kwargs['price']), amount_precision)
 
             if float(sell_currency) > TradeLimit.BTC:
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
@@ -77,7 +78,7 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
         while not order_detail.state == OrderState.FILLED:
             time.sleep(5)
             self.logger.info(f"{order_id}还未执行完成, 休眠5秒等待执行完成")
-            order_detail.state = self.request_client.get_order("symbol", order_id)
+            order_detail = self.request_client.get_order("symbol", order_id)
 
         # mongodb中减去已使用的美金
         result = self.keep_balance_collection.find_one({"symbol": symbol_name})
@@ -140,4 +141,3 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
 if __name__ == '__main__':
     keep_balance_strategy = KeepBalanceStrategy()
     keep_balance_strategy.signal()
-
