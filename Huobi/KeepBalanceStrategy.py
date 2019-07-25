@@ -1,5 +1,4 @@
 import time
-
 from Huobi.BaseStrategy import BaseStrategy
 from MongdbHandler.MongdbHandler import MongodbHandler
 from Util.FormatNumber import retain_decimals
