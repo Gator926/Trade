@@ -137,6 +137,5 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
 
 if __name__ == '__main__':
     keep_balance_strategy = KeepBalanceStrategy()
-    while True:
-        keep_balance_strategy.signal()
-        time.sleep(10)
+    keep_balance_strategy.signal()
+
