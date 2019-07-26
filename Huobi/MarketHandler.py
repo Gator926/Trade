@@ -1,5 +1,5 @@
 from huobi import RequestClient
-from MongdbHandler.MongdbHandler import MongodbHandler
+from MongdbHandler.MongodbHandler import MongodbHandler
 from huobi.model.symbol import Symbol
 
 
