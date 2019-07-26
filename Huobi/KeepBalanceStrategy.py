@@ -76,8 +76,8 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
 
         # 验证订单是否执行完成
         while not order_detail.state == OrderState.FILLED:
-            time.sleep(5)
-            self.logger.info(f"{order_id}还未执行完成, 休眠5秒等待执行完成")
+            time.sleep(1)
+            self.logger.info(f"{order_id}还未执行完成, 休眠1秒等待执行完成")
             order_detail = self.request_client.get_order("symbol", order_id)
 
         # mongodb中减去已使用的美金
