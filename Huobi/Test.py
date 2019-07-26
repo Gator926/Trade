@@ -52,6 +52,10 @@ class TestMarketHandler(TestCase):
         self.assertIsInstance(precision[0], dict)
 
     def test_check_symbol_info_with_empty_data(self):
+        """
+        检查交易对信息与数据库是否一致(无数据情况)
+        :return:
+        """
         self.mongodb_handler.precision_collection.delete_many({})
 
         self.market_handler.check_symbol_info(self.symbol_info)
@@ -60,6 +64,10 @@ class TestMarketHandler(TestCase):
         self.assertEqual(number, 1)
 
     def test_check_symbol_info_with_changed_data(self):
+        """
+        检查交易对信息与数据库是否一致(数据变更)
+        :return:
+        """
         self.mongodb_handler.precision_collection.delete_many({})
 
         changed_symbol_info = copy.deepcopy(self.symbol_info)
