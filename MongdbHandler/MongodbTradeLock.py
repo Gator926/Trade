@@ -1,5 +1,4 @@
 from MongdbHandler.MongodbHandler import MongodbHandler
-from LogHandler.LogHandler import LogHandler
 import datetime
 
 
