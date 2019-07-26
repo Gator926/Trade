@@ -1,8 +1,4 @@
 class TradeHandler:
-
-    def __init__(self):
-        pass
-
     def buy_market(self):
         pass
 
