@@ -3,31 +3,38 @@ from MongdbHandler.MongodbTradeLock import MongodbTradeLock
 from MongdbHandler.MongodbHandler import MongodbHandler
 
 
+class TestMongodbHandler(TestCase):
+    def test_init_mongodb(self):
+        mongodb_handler = MongodbHandler()
+        self.assertIsInstance(mongodb_handler, MongodbHandler)
+
+
 class TestMongodbTradeLock(TestCase):
     def setUp(self):
         self.symbol_name = 'btc'
         self.strategy = 'KeepBalance'
         self.mongodb_handler = MongodbHandler()
+        self.mongodb_trade_lock = MongodbTradeLock()
 
     def test_trade_lock(self):
         self.clean_test_record()
         self.assertEqual(self.count_lock_record_number(), 0)
-        MongodbTradeLock.trade_lock(self.symbol_name, self.strategy)
+        self.mongodb_trade_lock.trade_lock(self.symbol_name, self.strategy)
         self.assertEqual(self.count_lock_record_number(), 1)
 
     def test_trade_unlock(self):
         self.clean_test_record()
-        MongodbTradeLock.trade_lock(self.symbol_name, self.strategy)
+        self.mongodb_trade_lock.trade_lock(self.symbol_name, self.strategy)
         self.assertEqual(self.count_lock_record_number(), 1)
-        MongodbTradeLock.trade_unlock(self.symbol_name, self.strategy)
+        self.mongodb_trade_lock.trade_unlock(self.symbol_name, self.strategy)
         self.assertEqual(self.count_lock_record_number(), 0)
 
     def test_check_trade_lock_exist(self):
         self.clean_test_record()
-        MongodbTradeLock.trade_lock(self.symbol_name, self.strategy)
-        self.assertEqual(MongodbTradeLock.check_trade_lock_exist(self.symbol_name, self.strategy), True)
-        MongodbTradeLock.trade_unlock(self.symbol_name, self.strategy)
-        self.assertEqual(MongodbTradeLock.check_trade_lock_exist(self.symbol_name, self.strategy), False)
+        self.mongodb_trade_lock.trade_lock(self.symbol_name, self.strategy)
+        self.assertEqual(self.mongodb_trade_lock.check_trade_lock_exist(self.symbol_name, self.strategy), True)
+        self.mongodb_trade_lock.trade_unlock(self.symbol_name, self.strategy)
+        self.assertEqual(self.mongodb_trade_lock.check_trade_lock_exist(self.symbol_name, self.strategy), False)
 
     def count_lock_record_number(self):
         """
