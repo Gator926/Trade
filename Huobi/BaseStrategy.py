@@ -1,12 +1,12 @@
-from LogHandler.LogHandler import LogHandler
+from MongdbHandler.MongodbTradeLock import MongodbTradeLock
 
 
-class BaseStrategy(LogHandler):
+class BaseStrategy(MongodbTradeLock):
     """
     策略基类
     """
     def __init__(self):
-        LogHandler.__init__(self)
+        MongodbTradeLock.__init__(self)
 
     def signal(self):
         raise NotImplementedError

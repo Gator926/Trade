@@ -18,6 +18,3 @@ class MongodbHandler(LogHandler):
         self.precision_collection = self.mongo_database[self.precision_collection_name]
         self.keep_balance_collection = self.mongo_database[self.keep_balance_collection_name]
         self.lock_collection = self.mongo_database[self.lock_collection_name]
-
-    def __del__(self):
-        self.client.close()

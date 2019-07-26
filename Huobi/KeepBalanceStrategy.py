@@ -1,6 +1,5 @@
 import time
 from Huobi.BaseStrategy import BaseStrategy
-from MongdbHandler.MongdbHandler import MongodbHandler
 from Util.FormatNumber import retain_decimals
 from huobi.model import *
 from huobi import RequestClient
@@ -8,16 +7,16 @@ from Model.Action import Action
 from Model.TradeLimit import TradeLimit
 
 
-class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
+class KeepBalanceStrategy(BaseStrategy):
     """
     动态平衡策略
     """
 
     def __init__(self):
         BaseStrategy.__init__(self)
-        MongodbHandler.__init__(self)
         self.request_client = RequestClient(api_key=self.get_config_value("huobi", "api_key"),
                                             secret_key=self.get_config_value("huobi", "secret_key"))
+        self.strategy = 'KeepBalance'
 
     def signal(self):
         balance_dict = self.get_account_balance()
@@ -34,6 +33,7 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
                                  f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.05, 2)}")
 
     def buy(self, symbol_name, **kwargs):
+        self.trade_lock(symbol_name, self.strategy)
         try:
             assert kwargs['dollar'] >= kwargs['amount']
             buy_dollar = retain_decimals((float(kwargs['dollar']) - float(kwargs['amount'])) / 2, 2)
@@ -48,8 +48,11 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
         except AssertionError:
             self.logger.error(f"AssertionError, symbol={symbol_name}, amount={kwargs['amount']}, "
                               f"dollar={kwargs['dollar']}")
+        finally:
+            self.trade_unlock(symbol_name, self.strategy)
 
     def sell(self, symbol_name, **kwargs):
+        self.trade_lock(symbol_name, self.strategy)
         try:
             assert kwargs['amount'] > kwargs['dollar']
 
@@ -70,6 +73,8 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
         except AssertionError:
             self.logger.error(f"AssertionError, symbol={symbol_name}, amount={kwargs['amount']}, "
                               f"dollar={kwargs['dollar']}")
+        finally:
+            self.trade_unlock(symbol_name, self.strategy)
 
     def update_balance_and_dollar(self, order_id, action, symbol_name, **kwargs):
         order_detail = self.request_client.get_order("symbol", order_id)
@@ -105,10 +110,11 @@ class KeepBalanceStrategy(BaseStrategy, MongodbHandler):
         balance_dict = {}
         for key, value in enumerate(balances[0].balances):
             if value.balance > 0 and value.currency != 'usdt':
-                price, amount = self.get_account_amount(value.currency, value.balance)
-                dollar = self.get_mongodb_dollar(value.currency, amount)
-                balance_dict[value.currency] = {"balance": str(value.balance), "price": str(price),
-                                                "amount": str(amount), "dollar": dollar}
+                if not self.check_trade_lock_exist(value.currency, self.strategy):
+                    price, amount = self.get_account_amount(value.currency, value.balance)
+                    dollar = self.get_mongodb_dollar(value.currency, amount)
+                    balance_dict[value.currency] = {"balance": str(value.balance), "price": str(price),
+                                                    "amount": str(amount), "dollar": dollar}
         self.logger.debug(balance_dict)
         return balance_dict
 
