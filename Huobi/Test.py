@@ -28,7 +28,10 @@ class TestKeepBalanceStrategy(TestCase):
     def test_get_account_amount(self):
         self.fail()
 
-    def test_get_mongodb_dollar(self):
+    def test_get_mongodb_dollar_with_empty_data(self):
+        self.strategy.get_mongodb_dollar('')
+
+    def test_get_mongodb_dollar_with_data(self):
         pass
 
     def test_get_price(self):
