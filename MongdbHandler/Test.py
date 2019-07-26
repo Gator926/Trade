@@ -22,6 +22,13 @@ class TestMongodbTradeLock(TestCase):
         trade_unlock(self.symbol_name, self.strategy)
         self.assertEqual(self.count_lock_record_number(), 0)
 
+    def test_check_trade_lock_exist(self):
+        self.clean_test_record()
+        trade_lock(self.symbol_name, self.strategy)
+        self.assertEqual(check_trade_lock_exist(self.symbol_name, self.strategy), True)
+        trade_unlock(self.symbol_name, self.strategy)
+        self.assertEqual(check_trade_lock_exist(self.symbol_name, self.strategy), False)
+
     def count_lock_record_number(self):
         """
         获取满足条件的记录数
