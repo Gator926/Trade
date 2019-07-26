@@ -2,7 +2,7 @@ from MongdbHandler.MongodbHandler import MongodbHandler
 import datetime
 
 
-def trade_lock(symbol_name, strategy):
+def trade_lock(symbol_name: str, strategy: str) -> None:
     """
     交易同步锁, 避免重复交易
     :param symbol_name:
@@ -14,7 +14,7 @@ def trade_lock(symbol_name, strategy):
     mongodb_handler.lock_collection.insert_one(document)
 
 
-def trade_unlock(symbol_name, strategy):
+def trade_unlock(symbol_name: str, strategy: str) -> None:
     """
     解除交易同步锁
     :param symbol_name:
