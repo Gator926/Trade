@@ -121,8 +121,7 @@ class KeepBalanceStrategy(BaseStrategy):
     def get_account_amount(self, symbol_name, symbol_balance):
         price = self.get_price(symbol_name + "usdt")
         amount = str(float(symbol_balance) * float(price))
-        # 因为是开区间所有加3
-        amount = amount[:amount.index(".") + 3]
+        amount = retain_decimals(amount, 2)
         return price, amount
 
     def get_mongodb_dollar(self, symbol_name, symbol_amount):
