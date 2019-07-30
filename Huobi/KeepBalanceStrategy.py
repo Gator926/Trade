@@ -5,9 +5,10 @@ from huobi.model import *
 from huobi import RequestClient
 from Model.Action import Action
 from Model.TradeLimit import TradeLimit
+from LogHandler.MailHandler import MailHandler
 
 
-class KeepBalanceStrategy(BaseStrategy):
+class KeepBalanceStrategy(BaseStrategy, MailHandler):
     """
     动态平衡策略
     """
@@ -42,7 +43,7 @@ class KeepBalanceStrategy(BaseStrategy):
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
                                                             OrderType.BUY_MARKET, buy_dollar, None)
                 self.update_balance_and_dollar(order_id, Action.BUY, symbol_name, buy_dollar=buy_dollar)
-
+                self.send_mail("触发买入信号", f"动态平衡策略触发买入{buy_dollar}的{symbol_name}")
             else:
                 self.logger.warning(f"当前欲买入{buy_dollar}美金的{symbol_name}, 不满足最低交易限制")
         except AssertionError:
@@ -68,6 +69,7 @@ class KeepBalanceStrategy(BaseStrategy):
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
                                                             OrderType.SELL_MARKET, sell_currency, None)
                 self.update_balance_and_dollar(order_id, Action.SELL, symbol_name)
+                self.send_mail("触发卖出信号", f"动态平衡策略触发卖出{sell_currency}的{symbol_name}")
             else:
                 self.logger.warning(f"当前欲卖出{sell_currency}美金的{symbol_name}, 不满足最低交易限制")
         except AssertionError:

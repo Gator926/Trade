@@ -13,4 +13,4 @@ class ConfigHandler:
 
 if __name__ == '__main__':
     config_handler = ConfigHandler()
-    print(config_handler.get_config_value('config', 'password'))
+    print(config_handler.get_config_value('mongodb', 'host'))

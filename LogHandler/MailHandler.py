@@ -1,5 +1,5 @@
 import smtplib
-from LogHandler import LogHandler
+from LogHandler.LogHandler import LogHandler
 from email.mime.text import MIMEText
 from email.header import Header
 
@@ -14,7 +14,7 @@ class MailHandler(LogHandler):
         self.sender = self.get_config_value("mail", "sender")
         self.receivers = self.get_config_value("mail", "receivers")
 
-    def send_mail(self, subject, content):
+    def send_mail(self, subject: str, content: str) -> None:
         message = MIMEText(content, 'plain', 'utf-8')
         message['Subject'] = Header(subject, 'utf-8')
         try:
@@ -22,7 +22,7 @@ class MailHandler(LogHandler):
             smtp_obj.login(self.mail_user, self.mail_password)
             smtp_obj.sendmail(self.sender, self.receivers, message.as_string())
             smtp_obj.quit()
-            self.logger.error(f"邮件发送成功: {message}")
+            self.logger.info(f"邮件发送成功: {message.as_string()}")
         except smtplib.SMTPException as e:
             self.logger.error(e)
 

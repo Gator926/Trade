@@ -33,7 +33,7 @@ def draw_picture(data, money_list):
 
 
 def keep_balance_percentage(data):
-    for index in range(105, 106, 1):
+    for index in range(101, 150, 1):
         threshold = index / 100
         dollar = 200
         bitcoin = 0
@@ -45,23 +45,23 @@ def keep_balance_percentage(data):
                 dollar -= rest / 2
                 bitcoin += rest / 2 / value['open'] * 0.998
                 cost += rest / 2 * 0.002
-                print(f"{value['open_time']}买入{25 / value['open'] * 0.998}个比特币,当前美元: {dollar}, "
-                      f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
+                # print(f"{value['open_time']}买入{25 / value['open'] * 0.998}个比特币,当前美元: {dollar}, "
+                #       f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
             # 比特币高于阈值
             if dollar * threshold < bitcoin * value['open']:
                 rest = bitcoin * value['open'] - dollar
                 dollar += rest / 2 * 0.998
                 bitcoin -= rest / 2 / value['open']
                 cost += rest / 2 * 0.002
-                print(f"{value['open_time']}卖出{rest / 2 / value['open']}个比特币,当前美元: {dollar}, "
-                      f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
+                # print(f"{value['open_time']}卖出{rest / 2 / value['open']}个比特币,当前美元: {dollar}, "
+                #       f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
             elif bitcoin * value['open'] * threshold < dollar:
                 rest = dollar - bitcoin * value['open']
                 dollar -= rest / 2
                 bitcoin += rest / 2 / value['open'] * 0.998
                 cost += rest / 2 * 0.002
-                print(f"{value['open_time']}买入{rest / 2 / value['open'] * 0.998}个比特币,当前美元: {dollar}, "
-                      f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
+                # print(f"{value['open_time']}买入{rest / 2 / value['open'] * 0.998}个比特币,当前美元: {dollar}, "
+                #       f"比特币: {bitcoin}, 合计: {dollar + bitcoin * value['open']}, 手续费{cost}")
             if money_list[-1] != int(dollar + bitcoin * data[key - 1]['open']):
                 money_list.append(int(dollar + bitcoin * data[key - 1]['open']))
         # print(dollar, bitcoin)
