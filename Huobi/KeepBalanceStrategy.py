@@ -114,9 +114,10 @@ class KeepBalanceStrategy(BaseStrategy, MailHandler):
             if value.balance > 0 and value.currency != 'usdt':
                 if not self.check_trade_lock_exist(value.currency, self.strategy):
                     price, amount = self.get_account_amount(value.currency, value.balance)
-                    dollar = self.get_mongodb_dollar(value.currency, amount)
-                    balance_dict[value.currency] = {"balance": str(value.balance), "price": str(price),
-                                                    "amount": str(amount), "dollar": dollar}
+                    if float(amount) >= 1:
+                        dollar = self.get_mongodb_dollar(value.currency, amount)
+                        balance_dict[value.currency] = {"balance": str(value.balance), "price": str(price),
+                                                        "amount": str(amount), "dollar": dollar}
         self.logger.debug(balance_dict)
         return balance_dict
 
