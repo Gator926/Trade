@@ -14,5 +14,3 @@ def retain_decimals(number: str, precision: str) -> str:
     else:
         number = number[:number.index(".") + int(precision) + 1]
     return number
-
-print(12)
