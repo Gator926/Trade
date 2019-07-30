@@ -1,5 +1,16 @@
-# TODO :'2.650657248570439e-05'在类似于这种科学计数法的情况下，保留小数点会出错
+from decimal import *
+
+
 def retain_decimals(number: str, precision: str) -> str:
     number = str(number)
-    number = number[:number.index(".") + int(precision) + 1]
+    if "e" in number:
+        value = number[:number.index("e")]
+        base = number[number.index("e")+2:]
+        if "-" in number:
+            number = Decimal(value[:number.index(".") + int(precision) + 1]) / (10 ** Decimal(base))
+        elif "+" in number:
+            number = Decimal(value[:number.index(".") + int(precision) + 1]) * (10 ** Decimal(base))
+        return retain_decimals(str(number), precision)
+    else:
+        number = number[:number.index(".") + int(precision) + 1]
     return number
