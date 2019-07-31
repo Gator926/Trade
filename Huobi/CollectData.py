@@ -2,12 +2,14 @@ from huobi import SubscriptionClient
 from huobi.model import *
 from LogHandler.LogHandler import LogHandler
 from ConfigHandler.ConfigHandler import ConfigHandler
+from IO.File import FileReadAndWrite
 
 
 class CollectAccountData(LogHandler, ConfigHandler):
     def __init__(self):
         LogHandler.__init__(self)
         ConfigHandler.__init__(self)
+        FileReadAndWrite.__init__(self)
         self.sub_client = SubscriptionClient(api_key=self.get_config_value("huobi", "api_key"),
                                              secret_key=self.get_config_value("huobi", "secret_key"))
 
@@ -29,16 +31,10 @@ class CollectPriceData(ConfigHandler):
         ConfigHandler.__init__(self)
         self.sub_client = SubscriptionClient()
 
-    @staticmethod
-    def callback(candlestick_event: 'CandlestickEvent'):
-        print("Timestamp: " + str(int(candlestick_event.timestamp / 1000 / 60)))
-        print("Symbol: " + candlestick_event.symbol)
-        print("High: " + str(candlestick_event.data.high))
-        print("Low: " + str(candlestick_event.data.low))
-        print("Open: " + str(candlestick_event.data.open))
-        print("Close: " + str(candlestick_event.data.close))
-        print("Volume: " + str(candlestick_event.data.volume))
-        print()
+    def callback(self, candlestick_event: 'CandlestickEvent'):
+        content = f"{str(candlestick_event.timestamp)},{str(candlestick_event.data.close)}"
+        FileReadAndWrite.write(f"{self.get_config_value('price', 'price_file_locate')}{candlestick_event.symbol}.txt",
+                               content)
 
     def run(self):
         self.sub_client.subscribe_candlestick_event("btcusdt", CandlestickInterval.MIN1, self.callback)
