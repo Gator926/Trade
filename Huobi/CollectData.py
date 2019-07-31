@@ -33,7 +33,7 @@ class CollectPriceData(ConfigHandler):
 
     def callback(self, candlestick_event: 'CandlestickEvent'):
         content = f"{str(candlestick_event.timestamp)},{str(candlestick_event.data.close)}"
-        FileReadAndWrite.write(f"{self.get_config_value('price', 'price_file_locate')}{candlestick_event.symbol}.txt",
+        FileReadAndWrite.write(f"{self.get_config_value('strategy', 'price_file_locate')}{candlestick_event.symbol}.txt",
                                content)
 
     def run(self):

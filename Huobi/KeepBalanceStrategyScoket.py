@@ -21,6 +21,7 @@ class KeepBalanceStrategySocket(BaseStrategy, MailHandler, FileReadAndWrite):
         self.request_client = RequestClient(api_key=self.get_config_value("huobi", "api_key"),
                                             secret_key=self.get_config_value("huobi", "secret_key"))
         self.strategy = 'KeepBalance'
+        self.timeout = float(self.get_config_value("strategy", "timeout"))
 
     def signal(self):
         balance_dict = self.get_account_balance()
@@ -144,11 +145,11 @@ class KeepBalanceStrategySocket(BaseStrategy, MailHandler, FileReadAndWrite):
         :param symbol_name:
         :return:
         """
-        file = FileReadAndWrite.read(f"{self.get_config_value('price', 'price_file_locate')}{symbol_name}.txt")
+        file = FileReadAndWrite.read(f"{self.get_config_value('strategy', 'price_file_locate')}{symbol_name}.txt")
         time_stamp, price = file.split(",")
         # time.time()获取的时间为0时区时间, 火币为东8区时间, 因此减去28800秒
         current_time = time.time() - 28800
-        if abs(current_time - float(time_stamp) / 1000) < 5:
+        if abs(current_time - float(time_stamp) / 1000) < self.timeout:
             return price
         else:
             self.logger.error("动态平衡策略获取时间戳出错, 价格超时")
