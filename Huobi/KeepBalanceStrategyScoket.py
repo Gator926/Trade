@@ -32,8 +32,9 @@ class KeepBalanceStrategySocket(BaseStrategy, MailHandler, FileReadAndWrite):
                 self.sell(value, amount=balance_dict[value]["amount"], dollar=balance_dict[value]["dollar"],
                           price=balance_dict[value]["price"])
             else:
-                self.logger.info(f"当前持有{value}合计金额: {balance_dict[value]['amount']}, 对标美元: "
-                                 f"{balance_dict[value]['dollar']}, 小于阈值不触发交易, "
+                self.logger.info(f"当前{value}价格为{balance_dict[value]['price']}, 持有{value}合计金额: "
+                                 f"{balance_dict[value]['amount']}, 对标美元: {balance_dict[value]['dollar']}, "
+                                 f"小于阈值不触发交易, "
                                  f"买入阈值: {retain_decimals(float(balance_dict[value]['dollar']) / 1.05, 2)}, "
                                  f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.05, 2)}")
 
