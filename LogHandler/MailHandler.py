@@ -16,7 +16,10 @@ class MailHandler(LogHandler):
 
     def send_mail(self, subject: str, content: str) -> None:
         message = MIMEText(content, 'plain', 'utf-8')
+        message['From'] = Header("Python交易系统", 'utf-8')
+        message['To'] = Header("Gator", 'utf-8')
         message['Subject'] = Header(subject, 'utf-8')
+
         try:
             smtp_obj = smtplib.SMTP_SSL(self.mail_host, self.mail_port)
             smtp_obj.login(self.mail_user, self.mail_password)
