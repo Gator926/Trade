@@ -158,4 +158,10 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
 
 if __name__ == '__main__':
     keep_balance_strategy = KeepBalanceStrategySocket()
-    keep_balance_strategy.signal()
+    while True:
+        try:
+            keep_balance_strategy.signal()
+        except:
+            pass
+        finally:
+            time.sleep(1)
