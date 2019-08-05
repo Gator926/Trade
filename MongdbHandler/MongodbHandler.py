@@ -1,10 +1,10 @@
 import pymongo
-from LogHandler.LogHandler import LogHandler
+from LogHandler.MailHandler import MailHandler
 
 
-class MongodbHandler(LogHandler):
+class MongodbHandler(MailHandler):
     def __init__(self):
-        LogHandler.__init__(self)
+        MailHandler.__init__(self)
         self.host = self.get_config_value('mongodb', 'host')
         self.port = self.get_config_value('mongodb', 'port')
 

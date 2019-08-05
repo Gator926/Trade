@@ -5,12 +5,11 @@ from huobi.model import *
 from huobi import RequestClient
 from Model.Action import Action
 from Model.TradeLimit import TradeLimit
-from LogHandler.MailHandler import MailHandler
 from IO.File import FileReadAndWrite
 import time
 
 
-class KeepBalanceStrategySocket(BaseStrategy, MailHandler, FileReadAndWrite):
+class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
     """
     动态平衡策略
     """
@@ -35,8 +34,8 @@ class KeepBalanceStrategySocket(BaseStrategy, MailHandler, FileReadAndWrite):
                 self.logger.info(f"当前{value}价格为{balance_dict[value]['price']}, 持有{value}合计金额: "
                                  f"{balance_dict[value]['amount']}, 对标美元: {balance_dict[value]['dollar']}, "
                                  f"小于阈值不触发交易, "
-                                 f"买入阈值: {retain_decimals(float(balance_dict[value]['dollar']) / 1.05, 2)}, "
-                                 f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.05, 2)}")
+                                 f"买入阈值: {retain_decimals(float(balance_dict[value]['dollar']) / 1.03, 2)}, "
+                                 f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.03, 2)}")
 
     def buy(self, symbol_name, **kwargs):
         self.trade_lock(symbol_name, self.strategy)
