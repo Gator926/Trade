@@ -131,8 +131,8 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
 
     def get_account_amount(self, symbol_name, symbol_balance):
         price = self.get_price(symbol_name + "usdt")
-        amount = str(float(symbol_balance) * float(price))
-        amount = retain_decimals(str(amount), '2')
+        amount: str = str(float(symbol_balance) * float(price))
+        amount: str = retain_decimals(str(amount), '2')
         return price, amount
 
     def get_mongodb_dollar(self, symbol_name, symbol_amount):
