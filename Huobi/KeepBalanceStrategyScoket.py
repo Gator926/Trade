@@ -1,4 +1,3 @@
-import time
 from Huobi.BaseStrategy import BaseStrategy
 from Util.FormatNumber import retain_decimals
 from huobi.model import *
