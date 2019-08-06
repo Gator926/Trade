@@ -42,7 +42,7 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         try:
             assert kwargs['dollar'] >= kwargs['amount']
             buy_dollar = retain_decimals((float(kwargs['dollar']) - float(kwargs['amount'])) / 2, 2)
-            if float(buy_dollar) >= TradeLimit.USDT:
+            if float(buy_dollar) >= TradeLimit.trade_limit_dict['usdt']:
                 # 买入
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
                                                             OrderType.BUY_MARKET, buy_dollar, None)
@@ -69,7 +69,7 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
             sell_currency = retain_decimals(
                 (float(kwargs['amount']) - float(kwargs['dollar'])) / 2 / float(kwargs['price']), amount_precision)
 
-            if float(sell_currency) > TradeLimit.BTC:
+            if float(sell_currency) > TradeLimit.trade_limit_dict[symbol_name]:
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
                                                             OrderType.SELL_MARKET, sell_currency, None)
                 self.update_balance_and_dollar(order_id, Action.SELL, symbol_name)

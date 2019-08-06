@@ -1,3 +1,5 @@
 class TradeLimit:
-    USDT = 1
-    BTC = 0.0001
+    trade_limit_dict = {
+        "usdt": 1,
+        "btc": 0.0001
+    }
