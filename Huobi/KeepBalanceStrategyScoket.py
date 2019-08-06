@@ -52,6 +52,8 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         except AssertionError:
             self.logger.error(f"AssertionError, symbol={symbol_name}, amount={kwargs['amount']}, "
                               f"dollar={kwargs['dollar']}")
+        except Exception as E:
+            self.logger.error(E)
         finally:
             self.trade_unlock(symbol_name, self.strategy)
 
@@ -79,6 +81,8 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         except AssertionError:
             self.logger.error(f"AssertionError, symbol={symbol_name}, amount={kwargs['amount']}, "
                               f"dollar={kwargs['dollar']}")
+        except Exception as E:
+            self.logger.error(E)
         finally:
             self.trade_unlock(symbol_name, self.strategy)
 
