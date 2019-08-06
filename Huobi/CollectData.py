@@ -1,3 +1,5 @@
+from threading import Thread
+
 from huobi import SubscriptionClient
 from huobi.model import *
 from LogHandler.LogHandler import LogHandler
@@ -9,7 +11,6 @@ class CollectAccountData(LogHandler, ConfigHandler):
     def __init__(self):
         LogHandler.__init__(self)
         ConfigHandler.__init__(self)
-        FileReadAndWrite.__init__(self)
         self.sub_client = SubscriptionClient(api_key=self.get_config_value("huobi", "api_key"),
                                              secret_key=self.get_config_value("huobi", "secret_key"))
 
@@ -36,10 +37,13 @@ class CollectPriceData(ConfigHandler):
         FileReadAndWrite.write(f"{self.get_config_value('strategy', 'price_file_locate')}{candlestick_event.symbol}.txt",
                                content)
 
-    def run(self):
-        self.sub_client.subscribe_candlestick_event("btcusdt", CandlestickInterval.MIN1, self.callback)
+    def run(self, currency_pairs):
+        self.sub_client.subscribe_candlestick_event(currency_pairs, CandlestickInterval.MIN1, self.callback)
 
 
 if __name__ == '__main__':
-    collect_price_data = CollectPriceData()
-    collect_price_data.run()
+    price_data = CollectPriceData()
+    thread_btcusdt = Thread(target=price_data.run('btcusdt'))
+    thread_hb10usdt = Thread(target=price_data.run('hb10usdt'))
+    thread_btcusdt.start()
+    thread_hb10usdt.start()
