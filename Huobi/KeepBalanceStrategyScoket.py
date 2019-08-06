@@ -33,14 +33,14 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
                 self.logger.info(f"当前{value}价格为{balance_dict[value]['price']}, 持有{value}合计金额: "
                                  f"{balance_dict[value]['amount']}, 对标美元: {balance_dict[value]['dollar']}, "
                                  f"小于阈值不触发交易, "
-                                 f"买入阈值: {retain_decimals(float(balance_dict[value]['dollar']) / 1.03, 2)}, "
-                                 f"卖出阈值: {retain_decimals(float(balance_dict[value]['dollar']) * 1.03, 2)}")
+                                 f"买入阈值: {retain_decimals(str(float(balance_dict[value]['dollar']) / 1.03), '2')}, "
+                                 f"卖出阈值: {retain_decimals(str(float(balance_dict[value]['dollar']) * 1.03), '2')}")
 
     def buy(self, symbol_name, **kwargs):
         self.trade_lock(symbol_name, self.strategy)
         try:
             assert kwargs['dollar'] >= kwargs['amount']
-            buy_dollar = retain_decimals((float(kwargs['dollar']) - float(kwargs['amount'])) / 2, 2)
+            buy_dollar = retain_decimals(str((float(kwargs['dollar']) - float(kwargs['amount'])) / 2), '2')
             if float(buy_dollar) >= TradeLimit.trade_limit_dict['usdt']:
                 # 买入
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
@@ -66,7 +66,8 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
 
             # 计算欲卖出的数目
             sell_currency = retain_decimals(
-                (float(kwargs['amount']) - float(kwargs['dollar'])) / 2 / float(kwargs['price']), amount_precision)
+                str((float(kwargs['amount']) - float(kwargs['dollar'])) / 2 / float(kwargs['price'])),
+                str(amount_precision))
 
             if float(sell_currency) > TradeLimit.trade_limit_dict[symbol_name]:
                 order_id = self.request_client.create_order(symbol_name + 'usdt', AccountType.SPOT,
@@ -100,7 +101,7 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
             dollar += float(order_detail.filled_cash_amount)
 
         # 格式化美金数
-        dollar = retain_decimals(dollar, 2)
+        dollar = retain_decimals(str(dollar), '2')
 
         # mongodb更新操作
         self.keep_balance_collection.update_one({"symbol": symbol_name}, {"$set": {"amount": dollar}})
@@ -127,7 +128,7 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
     def get_account_amount(self, symbol_name, symbol_balance):
         price = self.get_price(symbol_name + "usdt")
         amount = str(float(symbol_balance) * float(price))
-        amount = retain_decimals(amount, 2)
+        amount = retain_decimals(str(amount), '2')
         return price, amount
 
     def get_mongodb_dollar(self, symbol_name, symbol_amount):
