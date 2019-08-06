@@ -115,7 +115,7 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         balances = self.request_client.get_account_balance()
         balance_dict = {}
         for key, value in enumerate(balances[0].balances):
-            if value.balance > 0 and value.currency != 'usdt' and value.currency != 'hb10':
+            if value.balance > 0 and value.currency != 'usdt':
                 if not self.check_trade_lock_exist(value.currency, self.strategy):
                     price, amount = self.get_account_amount(value.currency, value.balance)
                     if float(amount) >= 1:
