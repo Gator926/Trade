@@ -149,15 +149,19 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         :param symbol_name:
         :return:
         """
-        file = FileReadAndWrite.read(f"{self.get_config_value('strategy', 'price_file_locate')}{symbol_name}.txt")
-        time_stamp, price = file.split(",")
-        # time.time()获取的时间为0时区时间, 火币为东8区时间, 因此减去28800秒
-        current_time = time.time() - 28800
-        if abs(current_time - float(time_stamp) / 1000) < self.timeout:
-            return price
-        else:
-            self.logger.error("动态平衡策略获取时间戳出错, 价格超时")
-            raise TimeoutError
+        try:
+            file = FileReadAndWrite.read(f"{self.get_config_value('strategy', 'price_file_locate')}{symbol_name}.txt")
+            time_stamp, price = file.split(",")
+            # time.time()获取的时间为0时区时间, 火币为东8区时间, 因此减去28800秒
+            current_time = time.time() - 28800
+            if abs(current_time - float(time_stamp) / 1000) < self.timeout:
+                return price
+            else:
+                self.logger.error("动态平衡策略获取时间戳出错, 价格超时")
+                raise TimeoutError
+        except FileNotFoundError:
+            self.logger.error(f"{self.get_config_value('strategy', 'price_file_locate')}{symbol_name}.txt文件不存在")
+            raise FileNotFoundError
 
 
 if __name__ == '__main__':
