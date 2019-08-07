@@ -120,9 +120,9 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
         balance_dict = {}
         for key, value in enumerate(balances[0].balances):
             if value.balance > 0 and value.currency != 'usdt':
-                if not self.check_trade_lock_exist(value.currency, self.strategy):
-                    price, amount = self.get_account_amount(value.currency, value.balance)
-                    if float(amount) >= 1:
+                price, amount = self.get_account_amount(value.currency, value.balance)
+                if float(amount) >= 1:
+                    if not self.check_trade_lock_exist(value.currency, self.strategy):
                         dollar = self.get_mongodb_dollar(value.currency, amount)
                         balance_dict[value.currency] = {"balance": str(value.balance), "price": str(price),
                                                         "amount": str(amount), "dollar": dollar}
