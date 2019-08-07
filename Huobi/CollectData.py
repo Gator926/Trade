@@ -45,5 +45,7 @@ if __name__ == '__main__':
     price_data = CollectPriceData()
     thread_btcusdt = Thread(target=price_data.run('btcusdt'))
     thread_hb10usdt = Thread(target=price_data.run('hb10usdt'))
+    thread_eosusdt = Thread(target=price_data.run('eosusdt'))
     thread_btcusdt.start()
     thread_hb10usdt.start()
+    thread_eosusdt.start()
