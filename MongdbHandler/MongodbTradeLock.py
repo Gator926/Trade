@@ -41,5 +41,5 @@ class MongodbTradeLock(MongodbHandler):
             self.logger.info(f"{strategy}策略的{symbol_name}币种存在交易锁")
             return True
         else:
-            self.logger.info(f"{strategy}策略的{symbol_name}币种未发现交易锁")
+            self.logger.debug(f"{strategy}策略的{symbol_name}币种未发现交易锁")
             return False
