@@ -172,7 +172,7 @@ if __name__ == '__main__':
     while True:
         try:
             keep_balance_strategy.signal()
-        except:
-            pass
+        except Exception as E:
+            print(E)
         finally:
             time.sleep(1)
