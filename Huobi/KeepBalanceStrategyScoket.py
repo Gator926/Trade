@@ -7,6 +7,7 @@ from Model.Action import Action
 from Model.TradeLimit import TradeLimit
 from IO.File import FileReadAndWrite
 import time
+import os
 
 
 class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
@@ -161,6 +162,9 @@ class KeepBalanceStrategySocket(BaseStrategy, FileReadAndWrite):
                 return price
             else:
                 self.logger.error("动态平衡策略获取时间戳出错, 价格超时")
+                os.system("/root/miniconda3/bin/supervisorctl -u gator -p zhangpei529\!\@ -c "
+                          "/usr/supervisor/supervisord.conf restart collect_price_data")
+                self.logger.info("重启价格获取程序")
                 raise TimeoutError
         except FileNotFoundError:
             self.logger.error(f"{self.get_config_value('strategy', 'price_file_locate')}{symbol_name}.txt文件不存在")
