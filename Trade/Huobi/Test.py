@@ -1,6 +1,6 @@
 from unittest import TestCase
-from Huobi.KeepBalanceStrategy import KeepBalanceStrategy
-from Huobi.MarketHandler import MarketHandler
+from Trade.Huobi import KeepBalanceStrategy
+from Trade.Huobi import MarketHandler
 from MongdbHandler.MongodbHandler import MongodbHandler
 import copy
 
